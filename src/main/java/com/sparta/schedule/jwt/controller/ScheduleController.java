@@ -2,8 +2,10 @@ package com.sparta.schedule.jwt.controller;
 
 import com.sparta.schedule.jwt.dto.ScheduleRequestDto;
 import com.sparta.schedule.jwt.dto.ScheduleResponseDto;
+import com.sparta.schedule.jwt.dto.SchedulePageDto;
 import com.sparta.schedule.jwt.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,5 +44,14 @@ public class ScheduleController {
     public ResponseEntity<Void> deleteSchedule(@PathVariable Long id) {
         scheduleService.deleteSchedule(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // 일정 페이징 조회
+    @GetMapping
+    public ResponseEntity<Page<SchedulePageDto>> getSchedules(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<SchedulePageDto> schedules = scheduleService.getSchedules(page, size);
+        return ResponseEntity.ok(schedules);
     }
 }

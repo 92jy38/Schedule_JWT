@@ -1,5 +1,6 @@
 package com.sparta.schedule.jwt.service;
 
+import com.sparta.schedule.jwt.dto.SchedulePageDto;
 import com.sparta.schedule.jwt.dto.ScheduleRequestDto;
 import com.sparta.schedule.jwt.dto.ScheduleResponseDto;
 import com.sparta.schedule.jwt.entity.Schedule;
@@ -8,6 +9,10 @@ import com.sparta.schedule.jwt.exception.NotFoundException;
 import com.sparta.schedule.jwt.repository.ScheduleRepository;
 import com.sparta.schedule.jwt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,7 +62,12 @@ public class ScheduleService {
                 .orElseThrow(() -> new NotFoundException("일정을 찾을 수 없습니다."));
         return new ScheduleResponseDto(schedule);
     }
-
+    // 일정 페이징 조회
+    @Transactional(readOnly = true)
+    public Page<SchedulePageDto> getSchedules(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending());
+        return scheduleRepository.findAllWithCommentCount(pageable);
+    }
     // 일정 수정
     @Transactional
     public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto requestDto) {
