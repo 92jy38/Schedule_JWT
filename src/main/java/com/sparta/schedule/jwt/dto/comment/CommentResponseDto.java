@@ -1,4 +1,4 @@
-package com.sparta.schedule.jwt.dto;
+package com.sparta.schedule.jwt.dto.comment;
 
 import com.sparta.schedule.jwt.entity.Comment;
 import lombok.Getter;

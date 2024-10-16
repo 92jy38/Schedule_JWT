@@ -1,4 +1,4 @@
-package com.sparta.schedule.jwt.dto;
+package com.sparta.schedule.jwt.dto.user;
 
 import com.sparta.schedule.jwt.entity.User;
 import lombok.Getter;
