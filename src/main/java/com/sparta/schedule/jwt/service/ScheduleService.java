@@ -1,8 +1,8 @@
 package com.sparta.schedule.jwt.service;
 
-import com.sparta.schedule.jwt.dto.SchedulePageDto;
-import com.sparta.schedule.jwt.dto.ScheduleRequestDto;
-import com.sparta.schedule.jwt.dto.ScheduleResponseDto;
+import com.sparta.schedule.jwt.dto.page.SchedulePageDto;
+import com.sparta.schedule.jwt.dto.schedule.ScheduleRequestDto;
+import com.sparta.schedule.jwt.dto.schedule.ScheduleResponseDto;
 import com.sparta.schedule.jwt.entity.Schedule;
 import com.sparta.schedule.jwt.entity.User;
 import com.sparta.schedule.jwt.exception.NotFoundException;

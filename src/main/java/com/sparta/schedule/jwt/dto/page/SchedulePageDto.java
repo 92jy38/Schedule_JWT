@@ -1,4 +1,4 @@
-package com.sparta.schedule.jwt.dto;
+package com.sparta.schedule.jwt.dto.page;
 
 import lombok.Getter;
 import lombok.AllArgsConstructor;
