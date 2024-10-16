@@ -1,7 +1,7 @@
 package com.sparta.schedule.jwt.service;
 
-import com.sparta.schedule.jwt.dto.CommentRequestDto;
-import com.sparta.schedule.jwt.dto.CommentResponseDto;
+import com.sparta.schedule.jwt.dto.comment.CommentRequestDto;
+import com.sparta.schedule.jwt.dto.comment.CommentResponseDto;
 import com.sparta.schedule.jwt.entity.Comment;
 import com.sparta.schedule.jwt.entity.Schedule;
 import com.sparta.schedule.jwt.entity.User;

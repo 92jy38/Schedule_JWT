@@ -1,7 +1,7 @@
 package com.sparta.schedule.jwt.controller;
 
-import com.sparta.schedule.jwt.dto.UserRequestDto;
-import com.sparta.schedule.jwt.dto.UserResponseDto;
+import com.sparta.schedule.jwt.dto.user.UserRequestDto;
+import com.sparta.schedule.jwt.dto.user.UserResponseDto;
 import com.sparta.schedule.jwt.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;

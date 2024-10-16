@@ -1,7 +1,7 @@
 package com.sparta.schedule.jwt.service;
 
-import com.sparta.schedule.jwt.dto.UserRequestDto;
-import com.sparta.schedule.jwt.dto.UserResponseDto;
+import com.sparta.schedule.jwt.dto.user.UserRequestDto;
+import com.sparta.schedule.jwt.dto.user.UserResponseDto;
 import com.sparta.schedule.jwt.entity.User;
 import com.sparta.schedule.jwt.exception.BadRequestException;
 import com.sparta.schedule.jwt.exception.NotFoundException;

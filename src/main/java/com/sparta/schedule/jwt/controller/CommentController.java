@@ -1,7 +1,7 @@
 package com.sparta.schedule.jwt.controller;
 
-import com.sparta.schedule.jwt.dto.CommentRequestDto;
-import com.sparta.schedule.jwt.dto.CommentResponseDto;
+import com.sparta.schedule.jwt.dto.comment.CommentRequestDto;
+import com.sparta.schedule.jwt.dto.comment.CommentResponseDto;
 import com.sparta.schedule.jwt.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
