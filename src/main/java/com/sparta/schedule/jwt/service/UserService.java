@@ -59,8 +59,8 @@ public class UserService {
             throw new BadRequestException("이미 사용 중인 이메일입니다.");
         }
 
-        user.setUsername(requestDto.getUsername());
-        user.setEmail(requestDto.getEmail());
+        user.updateUsername(requestDto.getUsername());
+        user.updateEmail(requestDto.getEmail());
 
         return new UserResponseDto(user);
     }

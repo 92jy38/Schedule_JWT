@@ -9,8 +9,7 @@ import java.util.HashSet;
 
 @Entity
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 @Table(name = "users")
@@ -38,16 +37,18 @@ public class User {
     private LocalDateTime updatedAt; // 수정일
 
     // 작성한 일정들 (1:N 관계)
-    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private Set<Schedule> createdSchedules = new HashSet<>();
 
     // 담당한 일정들 (N:M 관계)
+    @ManyToMany(mappedBy = "assignedUsers")
     @Builder.Default
-    @ManyToMany(mappedBy = "assignedUsers", fetch = FetchType.LAZY)
     private Set<Schedule> assignedSchedules = new HashSet<>();
 
     // 작성한 댓글들 (1:N 관계)
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private Set<Comment> comments = new HashSet<>();
 
     // 생성 시각 설정
@@ -61,5 +62,23 @@ public class User {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    // 유저명 업데이트 메서드
+    public void updateUsername(String username) {
+        this.username = username;
+    }
+
+    // 이메일 업데이트 메서드
+    public void updateEmail(String email) {
+        this.email = email;
+    }
+
+    // 생성 메서드 (빌더 대신 사용 가능)
+    public static User createUser(String username, String email) {
+        User user = new User();
+        user.username = username;
+        user.email = email;
+        return user;
     }
 }

@@ -9,8 +9,7 @@ import java.util.HashSet;
 
 @Entity
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 @Table(name = "schedules")
@@ -46,7 +45,8 @@ public class Schedule {
     private Set<User> assignedUsers = new HashSet<>();
 
     // 댓글들과의 관계 설정 (1:N)
-    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private Set<Comment> comments = new HashSet<>();
 
     @Column(nullable = false, updatable = false)
@@ -66,5 +66,27 @@ public class Schedule {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    // 제목 업데이트 메서드
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    // 내용 업데이트 메서드
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
+    // 담당 유저 추가 메서드
+    public void addAssignedUser(User user) {
+        this.assignedUsers.add(user);
+        user.getAssignedSchedules().add(this);
+    }
+
+    // 담당 유저 제거 메서드
+    public void removeAssignedUser(User user) {
+        this.assignedUsers.remove(user);
+        user.getAssignedSchedules().remove(this);
     }
 }

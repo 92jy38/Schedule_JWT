@@ -78,10 +78,10 @@ public class ScheduleService {
             }
         }
 
-        schedule.setTitle(requestDto.getTitle());
-        schedule.setContent(requestDto.getContent());
-        schedule.setCreator(creator);
-        schedule.setAssignedUsers(assignedUsers);
+        schedule.updateTitle(requestDto.getTitle());
+        schedule.updateContent(requestDto.getContent());
+        schedule.getAssignedUsers().clear();
+        schedule.getAssignedUsers().addAll(assignedUsers);
 
         return new ScheduleResponseDto(schedule);
     }

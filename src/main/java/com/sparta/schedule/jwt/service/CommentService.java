@@ -63,7 +63,7 @@ public class CommentService {
             throw new BadRequestException("댓글 수정 권한이 없습니다.");
         }
 
-        comment.setContent(requestDto.getContent());
+        comment.updateContent(requestDto.getContent());
 
         return new CommentResponseDto(comment);
     }

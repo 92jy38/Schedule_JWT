@@ -7,8 +7,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 @Table(name = "comments")
@@ -50,5 +49,10 @@ public class Comment {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    // 댓글 내용 업데이트 메서드
+    public void updateContent(String content) {
+        this.content = content;
     }
 }
