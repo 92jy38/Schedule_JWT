@@ -3,6 +3,8 @@ package com.sparta.schedule.jwt.service;
 import com.sparta.schedule.jwt.dto.UserRequestDto;
 import com.sparta.schedule.jwt.dto.UserResponseDto;
 import com.sparta.schedule.jwt.entity.User;
+import com.sparta.schedule.jwt.exception.BadRequestException;
+import com.sparta.schedule.jwt.exception.NotFoundException;
 import com.sparta.schedule.jwt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,10 +21,10 @@ public class UserService {
     public UserResponseDto createUser(UserRequestDto requestDto) {
         // 유저명 및 이메일 중복 검사
         if (userRepository.existsByUsername(requestDto.getUsername())) {
-            throw new IllegalArgumentException("이미 사용 중인 유저명입니다.");
+            throw new BadRequestException("이미 사용 중인 유저명입니다.");
         }
         if (userRepository.existsByEmail(requestDto.getEmail())) {
-            throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+            throw new BadRequestException("이미 사용 중인 이메일입니다.");
         }
 
         User user = User.builder()
@@ -39,7 +41,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponseDto getUser(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다."));
         return new UserResponseDto(user);
     }
 
@@ -47,14 +49,14 @@ public class UserService {
     @Transactional
     public UserResponseDto updateUser(Long id, UserRequestDto requestDto) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다."));
 
         // 유저명 및 이메일 중복 검사
         if (!user.getUsername().equals(requestDto.getUsername()) && userRepository.existsByUsername(requestDto.getUsername())) {
-            throw new IllegalArgumentException("이미 사용 중인 유저명입니다.");
+            throw new BadRequestException("이미 사용 중인 유저명입니다.");
         }
         if (!user.getEmail().equals(requestDto.getEmail()) && userRepository.existsByEmail(requestDto.getEmail())) {
-            throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+            throw new BadRequestException("이미 사용 중인 이메일입니다.");
         }
 
         user.setUsername(requestDto.getUsername());
@@ -67,7 +69,7 @@ public class UserService {
     @Transactional
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new IllegalArgumentException("유저를 찾을 수 없습니다.");
+            throw new NotFoundException("유저를 찾을 수 없습니다.");
         }
         userRepository.deleteById(id);
     }

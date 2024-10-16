@@ -5,6 +5,8 @@ import com.sparta.schedule.jwt.dto.CommentResponseDto;
 import com.sparta.schedule.jwt.entity.Comment;
 import com.sparta.schedule.jwt.entity.Schedule;
 import com.sparta.schedule.jwt.entity.User;
+import com.sparta.schedule.jwt.exception.BadRequestException;
+import com.sparta.schedule.jwt.exception.NotFoundException;
 import com.sparta.schedule.jwt.repository.CommentRepository;
 import com.sparta.schedule.jwt.repository.ScheduleRepository;
 import com.sparta.schedule.jwt.repository.UserRepository;
@@ -25,11 +27,11 @@ public class CommentService {
     public CommentResponseDto createComment(CommentRequestDto requestDto) {
         // 작성자 유저 조회
         User user = userRepository.findById(requestDto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("작성자 유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("작성자 유저를 찾을 수 없습니다."));
 
         // 일정 조회
         Schedule schedule = scheduleRepository.findById(requestDto.getScheduleId())
-                .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("일정을 찾을 수 없습니다."));
 
         Comment comment = Comment.builder()
                 .content(requestDto.getContent())
@@ -46,7 +48,7 @@ public class CommentService {
     @Transactional(readOnly = true)
     public CommentResponseDto getComment(Long id) {
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
         return new CommentResponseDto(comment);
     }
 
@@ -54,11 +56,11 @@ public class CommentService {
     @Transactional
     public CommentResponseDto updateComment(Long id, CommentRequestDto requestDto) {
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
 
         // 작성자 본인인지 확인
         if (!comment.getUser().getId().equals(requestDto.getUserId())) {
-            throw new IllegalArgumentException("댓글 수정 권한이 없습니다.");
+            throw new BadRequestException("댓글 수정 권한이 없습니다.");
         }
 
         comment.setContent(requestDto.getContent());
@@ -70,11 +72,11 @@ public class CommentService {
     @Transactional
     public void deleteComment(Long id, Long userId) {
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
 
         // 작성자 본인인지 확인
         if (!comment.getUser().getId().equals(userId)) {
-            throw new IllegalArgumentException("댓글 삭제 권한이 없습니다.");
+            throw new BadRequestException("댓글 삭제 권한이 없습니다.");
         }
 
         commentRepository.deleteById(id);

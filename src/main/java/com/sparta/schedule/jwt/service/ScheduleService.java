@@ -4,6 +4,7 @@ import com.sparta.schedule.jwt.dto.ScheduleRequestDto;
 import com.sparta.schedule.jwt.dto.ScheduleResponseDto;
 import com.sparta.schedule.jwt.entity.Schedule;
 import com.sparta.schedule.jwt.entity.User;
+import com.sparta.schedule.jwt.exception.NotFoundException;
 import com.sparta.schedule.jwt.repository.ScheduleRepository;
 import com.sparta.schedule.jwt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +26,14 @@ public class ScheduleService {
     public ScheduleResponseDto createSchedule(ScheduleRequestDto requestDto) {
         // 작성자 유저 조회
         User creator = userRepository.findById(requestDto.getCreatorId())
-                .orElseThrow(() -> new IllegalArgumentException("작성자 유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("작성자 유저를 찾을 수 없습니다."));
 
         // 담당 유저들 조회
         Set<User> assignedUsers = new HashSet<>();
         if (requestDto.getAssignedUserIds() != null) {
             for (Long userId : requestDto.getAssignedUserIds()) {
                 User user = userRepository.findById(userId)
-                        .orElseThrow(() -> new IllegalArgumentException("담당 유저를 찾을 수 없습니다. ID: " + userId));
+                        .orElseThrow(() -> new NotFoundException("담당 유저를 찾을 수 없습니다. ID: " + userId));
                 assignedUsers.add(user);
             }
         }
@@ -53,7 +54,7 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public ScheduleResponseDto getSchedule(Long id) {
         Schedule schedule = scheduleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("일정을 찾을 수 없습니다."));
         return new ScheduleResponseDto(schedule);
     }
 
@@ -61,18 +62,18 @@ public class ScheduleService {
     @Transactional
     public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto requestDto) {
         Schedule schedule = scheduleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("일정을 찾을 수 없습니다."));
 
         // 작성자 유저 조회
         User creator = userRepository.findById(requestDto.getCreatorId())
-                .orElseThrow(() -> new IllegalArgumentException("작성자 유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("작성자 유저를 찾을 수 없습니다."));
 
         // 담당 유저들 조회
         Set<User> assignedUsers = new HashSet<>();
         if (requestDto.getAssignedUserIds() != null) {
             for (Long userId : requestDto.getAssignedUserIds()) {
                 User user = userRepository.findById(userId)
-                        .orElseThrow(() -> new IllegalArgumentException("담당 유저를 찾을 수 없습니다. ID: " + userId));
+                        .orElseThrow(() -> new NotFoundException("담당 유저를 찾을 수 없습니다. ID: " + userId));
                 assignedUsers.add(user);
             }
         }
@@ -89,7 +90,7 @@ public class ScheduleService {
     @Transactional
     public void deleteSchedule(Long id) {
         if (!scheduleRepository.existsById(id)) {
-            throw new IllegalArgumentException("일정을 찾을 수 없습니다.");
+            throw new NotFoundException("일정을 찾을 수 없습니다.");
         }
         scheduleRepository.deleteById(id);
     }
