@@ -25,7 +25,6 @@ public class CommentService {
     // 댓글 생성
     @Transactional
     public CommentResponseDto createComment(CommentRequestDto requestDto) {
-        // 작성자 유저 조회
         User user = userRepository.findById(requestDto.getUserId())
                 .orElseThrow(() -> new NotFoundException("작성자 유저를 찾을 수 없습니다."));
 

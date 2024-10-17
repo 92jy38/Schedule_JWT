@@ -16,28 +16,24 @@ public class UserController {
 
     private final UserService userService;
 
-    // 유저 생성
     @PostMapping
     public ResponseEntity<UserResponseDto> createUser(@Valid @RequestBody UserRequestDto requestDto) {
         UserResponseDto responseDto = userService.createUser(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-    // 유저 조회
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> getUser(@PathVariable Long id) {
         UserResponseDto responseDto = userService.getUser(id);
         return ResponseEntity.ok(responseDto);
     }
 
-    // 유저 수정
     @PutMapping("/{id}")
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserRequestDto requestDto) {
         UserResponseDto responseDto = userService.updateUser(id, requestDto);
         return ResponseEntity.ok(responseDto);
     }
 
-    // 유저 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);

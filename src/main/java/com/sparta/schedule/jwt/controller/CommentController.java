@@ -16,28 +16,24 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    // 댓글 생성
     @PostMapping
     public ResponseEntity<CommentResponseDto> createComment(@Valid @RequestBody CommentRequestDto requestDto) {
         CommentResponseDto responseDto = commentService.createComment(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-    // 댓글 조회
     @GetMapping("/{id}")
     public ResponseEntity<CommentResponseDto> getComment(@PathVariable Long id) {
         CommentResponseDto responseDto = commentService.getComment(id);
         return ResponseEntity.ok(responseDto);
     }
 
-    // 댓글 수정
     @PutMapping("/{id}")
     public ResponseEntity<CommentResponseDto> updateComment(@PathVariable Long id, @Valid @RequestBody CommentRequestDto requestDto) {
         CommentResponseDto responseDto = commentService.updateComment(id, requestDto);
         return ResponseEntity.ok(responseDto);
     }
 
-    // 댓글 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long id, @RequestParam Long userId) {
         commentService.deleteComment(id, userId);
