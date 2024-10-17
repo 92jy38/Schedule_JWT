@@ -93,3 +93,9 @@
 - No Permission <br>
 ![20241017_011420_5](https://github.com/user-attachments/assets/70a0505f-7536-4ae6-82dc-f8a5642bb987)<br> <hr>
 
+<hr>
+
+## 트러블 슈팅 <br>
+https://velog.io/@92jy38/%EC%9D%BC%EC%A0%95-%EA%B4%80%EB%A6%AC-%EC%95%B1-Develop-%EA%B3%BC%EC%A0%9C-%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85
+
+Fin.
