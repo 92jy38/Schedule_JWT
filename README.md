@@ -30,5 +30,72 @@
 |             | PUT    | `/api/comments/{id}`       | 댓글 수정                | ```json { "content": "string", "userId": "number", "scheduleId": "number" } ``` | ```json { "id": "number", "content": "string", "username": "string", "scheduleId": "number", "createdAt": "string", "updatedAt": "string" } ``` | `200 OK`             |
 |             | DELETE | `/api/comments/{id}`       | 댓글 삭제                | `userId` (Long)                             | 없음                                         | `204 No Content`     |
 
-![20241016_173119](https://github.com/user-attachments/assets/a70703bf-8a0c-496b-9306-c0d82991348a)
+## Mermaid <br>
+![20241016_173119](https://github.com/user-attachments/assets/a70703bf-8a0c-496b-9306-c0d82991348a) <br> <hr>
 
+## lv1 일정 <br>
+
+### Schedule CRUD TEST <br>
+
+- POST <br>
+  ![20241016_232526_1](https://github.com/user-attachments/assets/62f876ff-1901-4f25-88ba-007ec1492edd)<br>
+- GET <br>
+  ![20241016_232526_2](https://github.com/user-attachments/assets/f144482e-f11d-41fc-8e6e-2232559a990e)<br>
+- PUT <br>
+  ![20241016_232526_3](https://github.com/user-attachments/assets/96afcd7c-b5ec-44ff-8937-8859b036cd9c)<br>
+- DELETE <br>
+  ![20241016_232526_4](https://github.com/user-attachments/assets/adbd8d34-8e52-4c85-94cb-92c508c35f93)<br> <hr>
+
+
+## lv2 댓글 <br>
+### Comment CRUD TEST <br>
+
+- POST <br>
+![20241016_235459_1](https://github.com/user-attachments/assets/962b3b19-da40-449a-aa80-976c351490e7)<br>
+- GET <br>
+![20241016_235459_2](https://github.com/user-attachments/assets/862f36c2-2dc6-41c8-89ce-a2df812f1f0c)<br>
+- PUT <br>
+![20241016_235459_3](https://github.com/user-attachments/assets/e00f811c-fe9c-4060-875e-0d3bdb861e53)<br>
+- DELETE <br>
+![20241016_235459_4](https://github.com/user-attachments/assets/1b58c31e-638f-4bbb-9ec5-e17b2b4e8258)<br> <hr>
+
+
+## lv3 페이징 <br>
+### Paging TEST <br>
+
+![20241017_000650_2](https://github.com/user-attachments/assets/2be5dfb2-14f1-439e-9723-d87c1f207176)<br> <hr>
+
+
+## lv4 유저 <br>
+### User CRUD TEST
+
+- POST <br>
+![20241016_224653_1](https://github.com/user-attachments/assets/d4b083bc-c318-4058-b376-0345971f68fe)<br>
+- GET <br>
+![20241016_224653_2](https://github.com/user-attachments/assets/769a2c65-4b20-4687-9844-eed95dbd72ff)<br>
+- PUT <br>
+![20241016_224653_3](https://github.com/user-attachments/assets/b21b66ca-6908-40b3-9fd7-72e4421c178b)<br>
+- DELETE <br>
+![20241016_224653_4](https://github.com/user-attachments/assets/0778d0f3-f49c-4c35-9f0c-c3adf6c23059)<br> <hr>
+
+
+## lv5 예외 처리 <br>
+### Exception TEST 
+
+- Wrong Schedule Id <br>
+![20241017_011420_1](https://github.com/user-attachments/assets/5ea21ff3-ff5f-4357-b206-d1fe639982ba)<br>
+- Wrong User Id <br>
+![20241017_011420_2](https://github.com/user-attachments/assets/b9f016d6-3403-4c56-abd2-28056c2ac19f)<br>
+- Wrong Comment Id <br>
+![20241017_011420_3](https://github.com/user-attachments/assets/33e3d932-2c72-4dcb-9a35-a435dfd79290)<br>
+- Used User Id <br>
+![20241017_011420_4](https://github.com/user-attachments/assets/ba656a41-fea2-4613-9872-94e2815f7edc)<br>
+- No Permission <br>
+![20241017_011420_5](https://github.com/user-attachments/assets/70a0505f-7536-4ae6-82dc-f8a5642bb987)<br> <hr>
+
+<hr>
+
+## 트러블 슈팅 <br>
+https://velog.io/@92jy38/%EC%9D%BC%EC%A0%95-%EA%B4%80%EB%A6%AC-%EC%95%B1-Develop-%EA%B3%BC%EC%A0%9C-%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85
+
+Fin.
