@@ -50,41 +50,35 @@ public class Schedule {
     private Set<Comment> comments = new HashSet<>();
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt; // 작성일
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
-    private LocalDateTime updatedAt; // 수정일
+    private LocalDateTime updatedAt;
 
-    // 생성 시각 설정
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
     }
 
-    // 수정 시각 설정
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // 제목 업데이트 메서드
     public void updateTitle(String title) {
         this.title = title;
     }
 
-    // 내용 업데이트 메서드
     public void updateContent(String content) {
         this.content = content;
     }
 
-    // 담당 유저 추가 메서드
     public void addAssignedUser(User user) {
         this.assignedUsers.add(user);
         user.getAssignedSchedules().add(this);
     }
 
-    // 담당 유저 제거 메서드
     public void removeAssignedUser(User user) {
         this.assignedUsers.remove(user);
         user.getAssignedSchedules().remove(this);

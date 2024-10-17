@@ -33,25 +33,22 @@ public class Comment {
     private Schedule schedule;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt; // 작성일
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
-    private LocalDateTime updatedAt; // 수정일
+    private LocalDateTime updatedAt;
 
-    // 생성 시각 설정
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
     }
 
-    // 수정 시각 설정
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // 댓글 내용 업데이트 메서드
     public void updateContent(String content) {
         this.content = content;
     }

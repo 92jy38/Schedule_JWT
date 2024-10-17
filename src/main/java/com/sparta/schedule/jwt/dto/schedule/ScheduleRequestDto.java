@@ -18,6 +18,6 @@ public class ScheduleRequestDto {
     @NotNull(message = "작성자 ID는 필수입니다.")
     private Long creatorId;
 
-    // 담당 유저 ID 목록 (선택 사항)
+    // 담당 유저 ID 목록
     private Set<Long> assignedUserIds;
 }

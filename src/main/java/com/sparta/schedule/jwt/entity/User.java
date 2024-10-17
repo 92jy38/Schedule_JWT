@@ -31,10 +31,10 @@ public class User {
     private String email;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt; // 작성일
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
-    private LocalDateTime updatedAt; // 수정일
+    private LocalDateTime updatedAt;
 
     // 작성한 일정들 (1:N 관계)
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -51,30 +51,25 @@ public class User {
     @Builder.Default
     private Set<Comment> comments = new HashSet<>();
 
-    // 생성 시각 설정
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
     }
 
-    // 수정 시각 설정
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // 유저명 업데이트 메서드
     public void updateUsername(String username) {
         this.username = username;
     }
 
-    // 이메일 업데이트 메서드
     public void updateEmail(String email) {
         this.email = email;
     }
 
-    // 생성 메서드 (빌더 대신 사용 가능)
     public static User createUser(String username, String email) {
         User user = new User();
         user.username = username;

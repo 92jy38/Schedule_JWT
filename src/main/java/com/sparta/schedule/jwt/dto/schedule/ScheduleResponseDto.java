@@ -1,7 +1,7 @@
 package com.sparta.schedule.jwt.dto.schedule;
 
 import com.sparta.schedule.jwt.entity.Schedule;
-import com.sparta.schedule.jwt.entity.User; // User 클래스 import
+import com.sparta.schedule.jwt.entity.User;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
