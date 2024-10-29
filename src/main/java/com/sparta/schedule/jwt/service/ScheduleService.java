@@ -5,19 +5,17 @@ import com.sparta.schedule.jwt.dto.schedule.ScheduleRequestDto;
 import com.sparta.schedule.jwt.dto.schedule.ScheduleResponseDto;
 import com.sparta.schedule.jwt.entity.Schedule;
 import com.sparta.schedule.jwt.entity.User;
-import com.sparta.schedule.jwt.exception.NotFoundException;
+import com.sparta.schedule.jwt.exception.CustomException;
+import com.sparta.schedule.jwt.exception.ErrorCode;
 import com.sparta.schedule.jwt.repository.ScheduleRepository;
 import com.sparta.schedule.jwt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -31,14 +29,14 @@ public class ScheduleService {
     public ScheduleResponseDto createSchedule(ScheduleRequestDto requestDto) {
         // 작성자 유저 조회
         User creator = userRepository.findById(requestDto.getCreatorId())
-                .orElseThrow(() -> new NotFoundException("작성자 유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // 담당 유저들 조회
         Set<User> assignedUsers = new HashSet<>();
         if (requestDto.getAssignedUserIds() != null) {
             for (Long userId : requestDto.getAssignedUserIds()) {
                 User user = userRepository.findById(userId)
-                        .orElseThrow(() -> new NotFoundException("담당 유저를 찾을 수 없습니다. ID: " + userId));
+                        .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
                 assignedUsers.add(user);
             }
         }
@@ -59,31 +57,33 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public ScheduleResponseDto getSchedule(Long id) {
         Schedule schedule = scheduleRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("일정을 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND));
         return new ScheduleResponseDto(schedule);
     }
+
     // 일정 페이징 조회
     @Transactional(readOnly = true)
     public Page<SchedulePageDto> getSchedules(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending());
         return scheduleRepository.findAllWithCommentCount(pageable);
     }
+
     // 일정 수정
     @Transactional
     public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto requestDto) {
         Schedule schedule = scheduleRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("일정을 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND));
 
         // 작성자 유저 조회
         User creator = userRepository.findById(requestDto.getCreatorId())
-                .orElseThrow(() -> new NotFoundException("작성자 유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // 담당 유저들 조회
         Set<User> assignedUsers = new HashSet<>();
         if (requestDto.getAssignedUserIds() != null) {
             for (Long userId : requestDto.getAssignedUserIds()) {
                 User user = userRepository.findById(userId)
-                        .orElseThrow(() -> new NotFoundException("담당 유저를 찾을 수 없습니다. ID: " + userId));
+                        .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
                 assignedUsers.add(user);
             }
         }
@@ -100,7 +100,7 @@ public class ScheduleService {
     @Transactional
     public void deleteSchedule(Long id) {
         if (!scheduleRepository.existsById(id)) {
-            throw new NotFoundException("일정을 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.SCHEDULE_NOT_FOUND);
         }
         scheduleRepository.deleteById(id);
     }

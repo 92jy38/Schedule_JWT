@@ -3,8 +3,8 @@ package com.sparta.schedule.jwt.service;
 import com.sparta.schedule.jwt.dto.user.UserRequestDto;
 import com.sparta.schedule.jwt.dto.user.UserResponseDto;
 import com.sparta.schedule.jwt.entity.User;
-import com.sparta.schedule.jwt.exception.BadRequestException;
-import com.sparta.schedule.jwt.exception.NotFoundException;
+import com.sparta.schedule.jwt.exception.CustomException;
+import com.sparta.schedule.jwt.exception.ErrorCode;
 import com.sparta.schedule.jwt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,10 +21,10 @@ public class UserService {
     public UserResponseDto createUser(UserRequestDto requestDto) {
         // 유저명 및 이메일 중복 검사
         if (userRepository.existsByUsername(requestDto.getUsername())) {
-            throw new BadRequestException("이미 사용 중인 유저명입니다.");
+            throw new CustomException(ErrorCode.USERNAME_DUPLICATED);
         }
         if (userRepository.existsByEmail(requestDto.getEmail())) {
-            throw new BadRequestException("이미 사용 중인 이메일입니다.");
+            throw new CustomException(ErrorCode.EMAIL_DUPLICATED);
         }
 
         User user = User.builder()
@@ -41,7 +41,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponseDto getUser(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         return new UserResponseDto(user);
     }
 
@@ -49,14 +49,14 @@ public class UserService {
     @Transactional
     public UserResponseDto updateUser(Long id, UserRequestDto requestDto) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // 유저명 및 이메일 중복 검사
         if (!user.getUsername().equals(requestDto.getUsername()) && userRepository.existsByUsername(requestDto.getUsername())) {
-            throw new BadRequestException("이미 사용 중인 유저명입니다.");
+            throw new CustomException(ErrorCode.USERNAME_DUPLICATED);
         }
         if (!user.getEmail().equals(requestDto.getEmail()) && userRepository.existsByEmail(requestDto.getEmail())) {
-            throw new BadRequestException("이미 사용 중인 이메일입니다.");
+            throw new CustomException(ErrorCode.EMAIL_DUPLICATED);
         }
 
         user.updateUsername(requestDto.getUsername());
@@ -69,7 +69,7 @@ public class UserService {
     @Transactional
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new NotFoundException("유저를 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
         userRepository.deleteById(id);
     }
