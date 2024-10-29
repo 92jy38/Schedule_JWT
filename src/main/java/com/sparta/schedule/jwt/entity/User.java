@@ -69,11 +69,4 @@ public class User {
     public void updateEmail(String email) {
         this.email = email;
     }
-
-    public static User createUser(String username, String email) {
-        User user = new User();
-        user.username = username;
-        user.email = email;
-        return user;
-    }
 }
