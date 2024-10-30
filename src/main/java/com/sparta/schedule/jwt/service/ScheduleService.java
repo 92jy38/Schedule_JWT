@@ -27,26 +27,12 @@ public class ScheduleService {
     // 일정 생성
     @Transactional
     public ScheduleResponseDto createSchedule(ScheduleRequestDto requestDto) {
-        // 작성자 유저 조회
         User creator = userRepository.findById(requestDto.getCreatorId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        // 담당 유저들 조회
-        Set<User> assignedUsers = new HashSet<>();
-        if (requestDto.getAssignedUserIds() != null) {
-            for (Long userId : requestDto.getAssignedUserIds()) {
-                User user = userRepository.findById(userId)
-                        .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-                assignedUsers.add(user);
-            }
-        }
+        Set<User> assignedUsers = getAssignedUsers(requestDto.getAssignedUserIds());
 
-        Schedule schedule = Schedule.builder()
-                .title(requestDto.getTitle())
-                .content(requestDto.getContent())
-                .creator(creator)
-                .assignedUsers(assignedUsers)
-                .build();
+        Schedule schedule = Schedule.createSchedule(requestDto.getTitle(), requestDto.getContent(), creator, assignedUsers);
 
         scheduleRepository.save(schedule);
 
@@ -74,24 +60,10 @@ public class ScheduleService {
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND));
 
-        // 작성자 유저 조회
-        User creator = userRepository.findById(requestDto.getCreatorId())
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        Set<User> assignedUsers = getAssignedUsers(requestDto.getAssignedUserIds());
 
-        // 담당 유저들 조회
-        Set<User> assignedUsers = new HashSet<>();
-        if (requestDto.getAssignedUserIds() != null) {
-            for (Long userId : requestDto.getAssignedUserIds()) {
-                User user = userRepository.findById(userId)
-                        .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-                assignedUsers.add(user);
-            }
-        }
-
-        schedule.updateTitle(requestDto.getTitle());
-        schedule.updateContent(requestDto.getContent());
-        schedule.getAssignedUsers().clear();
-        schedule.getAssignedUsers().addAll(assignedUsers);
+        // 엔티티의 업데이트 메서드 호출
+        schedule.updateSchedule(requestDto.getTitle(), requestDto.getContent(), assignedUsers);
 
         return new ScheduleResponseDto(schedule);
     }
@@ -99,9 +71,16 @@ public class ScheduleService {
     // 일정 삭제
     @Transactional
     public void deleteSchedule(Long id) {
-        if (!scheduleRepository.existsById(id)) {
-            throw new CustomException(ErrorCode.SCHEDULE_NOT_FOUND);
+        Schedule schedule = scheduleRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND));
+
+        scheduleRepository.delete(schedule);
+    }
+
+    private Set<User> getAssignedUsers(Set<Long> userIds) {
+        if (userIds == null || userIds.isEmpty()) {
+            return Set.of();
         }
-        scheduleRepository.deleteById(id);
+        return new HashSet<>(userRepository.findAllById(userIds));
     }
 }

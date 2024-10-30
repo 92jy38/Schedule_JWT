@@ -28,15 +28,10 @@ public class CommentService {
         User user = userRepository.findById(requestDto.getUserId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        // 일정 조회
         Schedule schedule = scheduleRepository.findById(requestDto.getScheduleId())
                 .orElseThrow(() -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND));
 
-        Comment comment = Comment.builder()
-                .content(requestDto.getContent())
-                .user(user)
-                .schedule(schedule)
-                .build();
+        Comment comment = Comment.createComment(requestDto.getContent(), user, schedule);
 
         commentRepository.save(comment);
 
@@ -57,11 +52,10 @@ public class CommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
 
-        // 작성자 본인인지 확인
-        if (!comment.getUser().getId().equals(requestDto.getUserId())) {
-            throw new CustomException(ErrorCode.NO_COMMENT_PERMISSION);
-        }
+        // 엔티티의 작성자 검증 메서드 호출
+        comment.validateAuthor(requestDto.getUserId());
 
+        // 엔티티의 업데이트 메서드 호출
         comment.updateContent(requestDto.getContent());
 
         return new CommentResponseDto(comment);
@@ -73,11 +67,9 @@ public class CommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
 
-        // 작성자 본인인지 확인
-        if (!comment.getUser().getId().equals(userId)) {
-            throw new CustomException(ErrorCode.NO_COMMENT_PERMISSION);
-        }
+        // 엔티티의 작성자 검증 메서드 호출
+        comment.validateAuthor(userId);
 
-        commentRepository.deleteById(id);
+        commentRepository.delete(comment);
     }
 }

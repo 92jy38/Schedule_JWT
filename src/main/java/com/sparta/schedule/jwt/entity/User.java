@@ -62,11 +62,17 @@ public class User {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void updateUsername(String username) {
+    // 서비스의 도메인 로직 엔티티로 위임하기 위해 유저 정보 업데이트 메서드 추가
+    public void updateUser(String username, String email) {
         this.username = username;
+        this.email = email;
     }
 
-    public void updateEmail(String email) {
-        this.email = email;
+    // 유저 생성 정적 팩토리 메서드 추가
+    public static User createUser(String username, String email) {
+        return User.builder()
+                .username(username)
+                .email(email)
+                .build();
     }
 }

@@ -66,21 +66,47 @@ public class Schedule {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void updateTitle(String title) {
+    // 서비스의 도메인 로직 엔티티로 위임하기 위해 일정 업데이트 메서드 추가
+    public void updateSchedule(String title, String content, Set<User> assignedUsers) {
         this.title = title;
-    }
-
-    public void updateContent(String content) {
         this.content = content;
+        updateAssignedUsers(assignedUsers);
     }
 
-    public void addAssignedUser(User user) {
+    // 담당 유저 업데이트 메서드 추가
+    private void updateAssignedUsers(Set<User> newAssignedUsers) {
+        // 기존 담당 유저들과의 관계 제거
+        for (User user : this.assignedUsers) {
+            user.getAssignedSchedules().remove(this);
+        }
+        this.assignedUsers.clear();
+
+        // 새로운 담당 유저들과의 관계 설정
+        if (newAssignedUsers != null) {
+            for (User user : newAssignedUsers) {
+                assignUser(user);
+            }
+        }
+    }
+
+    // 담당 유저 추가 메서드 추가
+    public void assignUser(User user) {
         this.assignedUsers.add(user);
         user.getAssignedSchedules().add(this);
     }
 
-    public void removeAssignedUser(User user) {
-        this.assignedUsers.remove(user);
-        user.getAssignedSchedules().remove(this);
+    // 일정 생성 정적 팩토리 메서드 추가
+    public static Schedule createSchedule(String title, String content, User creator, Set<User> assignedUsers) {
+        Schedule schedule = Schedule.builder()
+                .title(title)
+                .content(content)
+                .creator(creator)
+                .build();
+        if (assignedUsers != null) {
+            for (User user : assignedUsers) {
+                schedule.assignUser(user);
+            }
+        }
+        return schedule;
     }
 }

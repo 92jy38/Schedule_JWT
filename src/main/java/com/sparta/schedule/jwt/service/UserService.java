@@ -20,17 +20,9 @@ public class UserService {
     @Transactional
     public UserResponseDto createUser(UserRequestDto requestDto) {
         // 유저명 및 이메일 중복 검사
-        if (userRepository.existsByUsername(requestDto.getUsername())) {
-            throw new CustomException(ErrorCode.USERNAME_DUPLICATED);
-        }
-        if (userRepository.existsByEmail(requestDto.getEmail())) {
-            throw new CustomException(ErrorCode.EMAIL_DUPLICATED);
-        }
+        validateUsernameAndEmail(requestDto.getUsername(), requestDto.getEmail());
 
-        User user = User.builder()
-                .username(requestDto.getUsername())
-                .email(requestDto.getEmail())
-                .build();
+        User user = User.createUser(requestDto.getUsername(), requestDto.getEmail());
 
         userRepository.save(user);
 
@@ -52,15 +44,10 @@ public class UserService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // 유저명 및 이메일 중복 검사
-        if (!user.getUsername().equals(requestDto.getUsername()) && userRepository.existsByUsername(requestDto.getUsername())) {
-            throw new CustomException(ErrorCode.USERNAME_DUPLICATED);
-        }
-        if (!user.getEmail().equals(requestDto.getEmail()) && userRepository.existsByEmail(requestDto.getEmail())) {
-            throw new CustomException(ErrorCode.EMAIL_DUPLICATED);
-        }
+        validateUsernameAndEmailForUpdate(user, requestDto.getUsername(), requestDto.getEmail());
 
-        user.updateUsername(requestDto.getUsername());
-        user.updateEmail(requestDto.getEmail());
+        // 엔티티의 업데이트 메서드 호출
+        user.updateUser(requestDto.getUsername(), requestDto.getEmail());
 
         return new UserResponseDto(user);
     }
@@ -68,9 +55,26 @@ public class UserService {
     // 유저 삭제
     @Transactional
     public void deleteUser(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        userRepository.delete(user);
+    }
+
+    private void validateUsernameAndEmail(String username, String email) {
+        if (userRepository.existsByUsername(username)) {
+            throw new CustomException(ErrorCode.USERNAME_DUPLICATED);
         }
-        userRepository.deleteById(id);
+        if (userRepository.existsByEmail(email)) {
+            throw new CustomException(ErrorCode.EMAIL_DUPLICATED);
+        }
+    }
+
+    private void validateUsernameAndEmailForUpdate(User user, String newUsername, String newEmail) {
+        if (!user.getUsername().equals(newUsername) && userRepository.existsByUsername(newUsername)) {
+            throw new CustomException(ErrorCode.USERNAME_DUPLICATED);
+        }
+        if (!user.getEmail().equals(newEmail) && userRepository.existsByEmail(newEmail)) {
+            throw new CustomException(ErrorCode.EMAIL_DUPLICATED);
+        }
     }
 }
