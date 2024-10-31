@@ -31,7 +31,7 @@ public class CommentService {
         Schedule schedule = scheduleRepository.findById(requestDto.getScheduleId())
                 .orElseThrow(() -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND));
 
-        Comment comment = Comment.createComment(requestDto.getContent(), user, schedule);
+        Comment comment = Comment.create(requestDto.getContent(), user, schedule);
 
         commentRepository.save(comment);
 

@@ -64,7 +64,7 @@ public class Comment {
     }
 
     // 댓글 생성 정적 팩토리 메서드 추가
-    public static Comment createComment(String content, User user, Schedule schedule) {
+    public static Comment create(String content, User user, Schedule schedule) {
         return Comment.builder()
                 .content(content)
                 .user(user)

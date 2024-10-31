@@ -22,7 +22,7 @@ public class UserService {
         // 유저명 및 이메일 중복 검사
         validateUsernameAndEmail(requestDto.getUsername(), requestDto.getEmail());
 
-        User user = User.createUser(requestDto.getUsername(), requestDto.getEmail());
+        User user = User.create(requestDto.getUsername(), requestDto.getEmail());
 
         userRepository.save(user);
 
@@ -47,7 +47,7 @@ public class UserService {
         validateUsernameAndEmailForUpdate(user, requestDto.getUsername(), requestDto.getEmail());
 
         // 엔티티의 업데이트 메서드 호출
-        user.updateUser(requestDto.getUsername(), requestDto.getEmail());
+        user.update(requestDto.getUsername(), requestDto.getEmail());
 
         return new UserResponseDto(user);
     }

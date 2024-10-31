@@ -67,7 +67,7 @@ public class Schedule {
     }
 
     // 서비스의 도메인 로직 엔티티로 위임하기 위해 일정 업데이트 메서드 추가
-    public void updateSchedule(String title, String content, Set<User> assignedUsers) {
+    public void update(String title, String content, Set<User> assignedUsers) {
         this.title = title;
         this.content = content;
         updateAssignedUsers(assignedUsers);
@@ -96,7 +96,7 @@ public class Schedule {
     }
 
     // 일정 생성 정적 팩토리 메서드 추가
-    public static Schedule createSchedule(String title, String content, User creator, Set<User> assignedUsers) {
+    public static Schedule create(String title, String content, User creator, Set<User> assignedUsers) {
         Schedule schedule = Schedule.builder()
                 .title(title)
                 .content(content)

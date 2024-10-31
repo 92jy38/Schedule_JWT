@@ -32,7 +32,7 @@ public class ScheduleService {
 
         Set<User> assignedUsers = getAssignedUsers(requestDto.getAssignedUserIds());
 
-        Schedule schedule = Schedule.createSchedule(requestDto.getTitle(), requestDto.getContent(), creator, assignedUsers);
+        Schedule schedule = Schedule.create(requestDto.getTitle(), requestDto.getContent(), creator, assignedUsers);
 
         scheduleRepository.save(schedule);
 
@@ -63,7 +63,7 @@ public class ScheduleService {
         Set<User> assignedUsers = getAssignedUsers(requestDto.getAssignedUserIds());
 
         // 엔티티의 업데이트 메서드 호출
-        schedule.updateSchedule(requestDto.getTitle(), requestDto.getContent(), assignedUsers);
+        schedule.update(requestDto.getTitle(), requestDto.getContent(), assignedUsers);
 
         return new ScheduleResponseDto(schedule);
     }
